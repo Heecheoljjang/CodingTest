@@ -46,8 +46,10 @@ func solution(_ dartResult: String) -> Int {
     for i in 0...2 {
         if results[i].filter({$0.isNumber}).count == 2 {
             score.append(10)
+            print(score)
         } else {
             score.append(Int(results[i].filter({$0.isNumber}))!)
+            print(score)
         }
         switch results[i].filter({$0.isLetter}) {
         case "S":
@@ -61,10 +63,11 @@ func solution(_ dartResult: String) -> Int {
         }
         if results[i].last == "*" {
             score[i] *= 2
+            print(score)
             if i > 0 {
                 score[i-1] *= 2
             }
-        } else {
+        } else if results[i].last == "#"{
             score[i] *= -1
         }
     }
@@ -72,8 +75,7 @@ func solution(_ dartResult: String) -> Int {
     for i in 0...2 {
         num += score[i]
     }
-    
+    print(score)
     return num
 }
-
 solution("1S2D*3T")
