@@ -1,35 +1,49 @@
 import Foundation
 
-//func solution(_ id_list:[String], _ report:[String], _ k:Int) -> [Int] {
-//
-//    let setList = Set(report)
-//    let removedList = Array(setList) //중복제거
-//
-//    var reportList: [String: String] = [:]
-//    var mail: [String: Int] = [:]
-//
-//    for i in 0..<id_list.count {
-//        mail.updateValue(0, forKey: id_list[i])
-//    }
-//
-//    for i in 0..<removedList.count {
-//        reportList.updateValue(removedList[i].components(separatedBy: " ")[1], forKey: removedList[i].components(separatedBy: " ")[0])
-//        print(reportList)
-//    }
-//
-//    reportList = reportList.filter{$0.value.count >= k} // 신고횟수가 k번을 넘은 것들만 남김
-//    print(reportList)
-//    for value in reportList.values {
-//        mail[value]! += 1
-//    }
-//    print(mail)
-//    return mail.map{$0.value}
-//}
-//
-//solution(["muzi", "frodo", "apeach", "neo"], ["muzi frodo", "apeach frodo", "frodo neo", "muzi neo", "apeach muzi"], 2)
 func solution(_ id_list:[String], _ report:[String], _ k:Int) -> [Int] {
 
+    let setList = Set(report)
+    let removedList = Array(setList)
+
+    var reportDic = [String: [String]]()
+    var reported: [String] = []
+    var arrest: [String] = []
+    var mailCount: [String: Int] = [:]
+    var count: [Int] = []
     
+    for i in 0..<id_list.count {
+        mailCount.updateValue(0, forKey: id_list[i])
+    }
+
+    for i in 0..<removedList.count {
+        reported.append(removedList[i].components(separatedBy: " ")[1])
+    }
+    for id in reported {
+        if reported.filter{$0 == id}.count >= k {
+            if !arrest.contains(id){
+                arrest.append(id)
+            }
+        }
+    }
+
+    for i in 0..<removedList.count {
+        if reportDic.keys.contains(removedList[i].components(separatedBy: " ")[0]) {
+            reportDic[removedList[i].components(separatedBy: " ")[0]]?.append(removedList[i].components(separatedBy: " ")[1])
+        } else {
+            reportDic.updateValue([removedList[i].components(separatedBy: " ")[1]], forKey: removedList[i].components(separatedBy: " ")[0])
+        }
+    }
     
-    return []
+    for key in reportDic.keys {
+        for id in arrest {
+            if reportDic[key]!.contains(id) {
+                mailCount[key]! += 1
+            }
+        }
+    }
+    for id in id_list {
+        count.append(mailCount[id]!)
+    }
+    return count
 }
+
