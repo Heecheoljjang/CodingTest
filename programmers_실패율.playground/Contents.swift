@@ -10,6 +10,7 @@ import Foundation
 //    var rate: [Int] = []
 //
 //    for i in 0..<N {
+//
 //        pass.append(stages.filter{$0 >= (i + 1)}.count)
 //        fail.append(stages.filter{$0 == (i + 1)}.count)
 //
