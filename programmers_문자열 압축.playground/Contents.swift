@@ -6,8 +6,12 @@ func solution(_ s: String) -> Int {
     var result: String = ""
     var resultCount: [Int] = []
     var count: Int = 1
-    var length: Int
-
+    var temp: String = ""
+    
+    if s.count <= 2 {
+        return s.count
+    }
+    
     for i in 1...s.count/2 {
         var s = s
         var str = ""
@@ -25,33 +29,42 @@ func solution(_ s: String) -> Int {
             }
         }
         print(arr)
-        length = arr.count
         //
         //문자열을 압축
-        for j in 0..<length {
-            count = 1
-            for k in j+1..<length {
-                if arr[j] == arr[k] {
-                    count += 1
-                    continue
-                }
-                if arr[j] != arr[k] {
-                    if count != 1 {
-                        result += "\(count)\(arr[j])"
-                        
-                        break
-                    } else {
-                        result += arr[j]
-                        
-                    }
+        for element in arr {
+            print("temp: \(temp), element:\(element), count: \(count)")
+            
+            if temp == "" {
+                temp = element
+                continue
+            }
+            if temp == element {
+                count += 1
+                continue
+            } else {
+                if count == 1 {
+                    result += temp
+                    temp = element
+                } else {
+                    result += "\(count)\(temp)"
+                    temp = element
+                    count = 1
                 }
             }
         }
+        if count == 1 && !temp.isEmpty {
+            result += temp
+        } else if count >= 2 {
+            result += "\(count)\(temp)"
+        }
+        print(result)
+        count = 1
+        temp = ""
         resultCount.append(result.count)
-        print(resultCount)
+        result = ""
         arr = []
     }
-    return 0
+    return resultCount.sorted { $0 < $1}[0]
 }
-solution("aabbabcc")
+solution("ababcdcdababcdcd")
 
