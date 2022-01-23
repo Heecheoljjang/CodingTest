@@ -1,6 +1,6 @@
-func solution(_ N: Int) -> Int {
+func solution() -> Int {
 
-    var N = N
+    var N = Int(readLine()!)!
     var result: Int = 0
     
     if N % 5 == 0 {
@@ -16,4 +16,5 @@ func solution(_ N: Int) -> Int {
     }
     return -1
 }
-solution(11)
+
+print(solution())
