@@ -1,12 +1,13 @@
-//import Foundation
-//
-//func solution(_ numbers:[Int]) -> String {
-//
-//    var result: String = ""
-//    let numbers = numbers.map{String($0)}
-//
-//    return result
-//}
+import Foundation
 
-let a = ["123", "45", "23", "987"]
-print(a.sorted{$0.first! > $1.first!})
+func solution(_ numbers:[Int]) -> String {
+
+    let number: [Int] = numbers.sorted{Int("\($0)\($1)")! > Int("\($1)\($0)")!}
+    
+    if number[0] == 0 {
+        return "0"
+    }
+    
+    return number.reduce(""){$0 + String($1)}
+}
+
