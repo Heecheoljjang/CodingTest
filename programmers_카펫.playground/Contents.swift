@@ -22,6 +22,10 @@ func solution(_ brown:Int, _ yellow:Int) -> [Int] {
     
     if yellow == 1 {
         result = [3, 3]
+    } else if yellow == 2 {
+        result = [4, 3]
+    } else if yellow == 3 {
+        result = [5, 3]
     } else {
         //약수 구하기
         getDivisor(yellow)
@@ -33,9 +37,13 @@ func solution(_ brown:Int, _ yellow:Int) -> [Int] {
                 height = i
                 width = yellow / i
                 
-                if brown == (height + 2) * 2 + 
+                if brown == (height + 2 + width) * 2 {
+                    result = [width + 2, height + 2]
+                    break
+                }
             }
         }
     }
     return result
 }
+
