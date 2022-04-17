@@ -2,28 +2,37 @@ import Foundation
 
 func solution(_ progresses:[Int], _ speeds:[Int]) -> [Int] {
 
-    var progress = progresses
-    let speed = speeds
+    var revProgress: [Int] = progresses.reversed()
+    let revSpeed: [Int] = speeds.reversed()
     var result: [Int] = []
-    var temp: [Int] = []
     var count = 0
-
-    while progress.count != 0 {
-        progress = zip(progress, speed).map{$0 + $1}
-        if progress[0] >= 100 {
-            for i in progress {
-                if i >= 100 {
-                    temp.append(i)
-                } else {
-                    break
+    
+    if revProgress.count == 1{
+        result = [1]
+    } else {
+        while revProgress.count != 1 {
+            revProgress = zip(revProgress, revSpeed).map {$0 + $1}
+            if revProgress.last! >= 100 {
+                while revProgress.last! >= 100 {
+                    revProgress.popLast()
+                    count += 1
+                    if revProgress.count == 1{
+                        break
+                    }
                 }
+                result.append(count)
+                count = 0
             }
-            count = temp.count
-            result.append(count)
-            progress.removeSubrange(0..<count)
-            temp = []
+        }
+        if revProgress[0] >= 100 {
+            if var last = result.last {
+                last += 1
+                result.popLast()
+                result.append(last)
+            }
+        } else {
+            result.append(1)
         }
     }
     return result
 }
-
