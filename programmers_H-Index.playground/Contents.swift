@@ -13,12 +13,20 @@ import Foundation
 //}
 
 func solution(_ citations:[Int]) -> Int {
-    let sorted = citations.sorted(by: >)
-    for i in 0..<sorted.count {
-        if i >= sorted[i] {
-            return i
+    
+    var result: Int = 0
+    let sorted = citations.sorted{$0 > $1}
+
+    if sorted.min()! > sorted.count {
+        result = sorted.count
+    } else {
+        for i in 0..<sorted.count {
+            if i+1 > sorted[i] {
+                result = i
+                break
+            }
         }
     }
-    return 0
+    return result
 }
 
