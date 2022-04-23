@@ -35,7 +35,9 @@ func solution(_ orders:[String], _ course:[Int]) -> [String] {
         if let max = menu.filter {$0.key.count == i}.values.max() {
             for j in menu.filter {$0.key.count == i} {
                 if j.value == max {
-                    result.append(j.key)
+                    if j.value >= 2 {
+                        result.append(j.key)
+                    }
                 }
             }
         }
@@ -43,7 +45,7 @@ func solution(_ orders:[String], _ course:[Int]) -> [String] {
     return result.sorted(by: <)
 }
 
-solution(["ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"], [2,3,4])
+solution(["ABCDE", "AB", "CD", "ADE", "XYZ", "XYZ", "ACD"], [2,3,5])
 
 
 //
