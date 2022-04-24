@@ -1,49 +1,47 @@
 import Foundation
 
 func solution(_ id_list:[String], _ report:[String], _ k:Int) -> [Int] {
-
-    let setList = Set(report)
-    let removedList = Array(setList)
-
-    var reportDic = [String: [String]]()
+    
     var reported: [String] = []
-    var arrest: [String] = []
-    var mailCount: [String: Int] = [:]
-    var count: [Int] = []
+    var temp: [String: Int] = [:]
+    var result: [String: Int] = [:]
+    var resultCount: [Int] = []
     
-    for i in 0..<id_list.count {
-        mailCount.updateValue(0, forKey: id_list[i])
+    for i in report {
+        reported.append(i.components(separatedBy: " ")[1])
     }
-
-    for i in 0..<removedList.count {
-        reported.append(removedList[i].components(separatedBy: " ")[1])
-    }
-    for id in reported {
-        if reported.filter{$0 == id}.count >= k {
-            if !arrest.contains(id){
-                arrest.append(id)
-            }
-        }
-    }
-
-    for i in 0..<removedList.count {
-        if reportDic.keys.contains(removedList[i].components(separatedBy: " ")[0]) {
-            reportDic[removedList[i].components(separatedBy: " ")[0]]?.append(removedList[i].components(separatedBy: " ")[1])
+    
+    for i in reported {
+        if temp.keys.contains(i) {
+            temp[i]! += 1
         } else {
-            reportDic.updateValue([removedList[i].components(separatedBy: " ")[1]], forKey: removedList[i].components(separatedBy: " ")[0])
+            temp.updateValue(1, forKey: i)
         }
     }
-    
-    for key in reportDic.keys {
-        for id in arrest {
-            if reportDic[key]!.contains(id) {
-                mailCount[key]! += 1
+    reported = []
+    for i in temp {
+        if i.value >= k {
+            reported.append(i.key)
+        }
+    }
+    print(reported)
+    for i in report {
+        if reported.contains(i.components(separatedBy: " ")[1]) {
+            if result.keys.contains(i.components(separatedBy: " ")[0]) {
+                result[i.components(separatedBy: " ")[0]]! += 1
+            } else {
+                result.updateValue(1, forKey: i.components(separatedBy: " ")[0])
             }
         }
     }
-    for id in id_list {
-        count.append(mailCount[id]!)
+    for i in id_list {
+        if result.keys.contains(i) {
+            resultCount.append(result[i]!)
+        } else {
+            resultCount.append(0)
+        }
     }
-    return count
+    
+    return resultCount
 }
-
+solution(["muzi", "frodo", "apeach", "neo"], ["muzi frodo","apeach frodo","frodo neo","muzi neo","apeach muzi"], 2)
