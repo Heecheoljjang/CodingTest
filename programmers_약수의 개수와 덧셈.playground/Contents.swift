@@ -1,41 +1,25 @@
 import Foundation
+import Darwin
 
 func solution(_ left:Int, _ right:Int) -> Int {
     
+    var count: Int = 0
     var result: Int = 0
-    var temp: Int = 0
-
-    if left == 1 {
-        for i in 2...right {
-            for j in 1...i/2 {
-                if i % j == 0 && j != 1{
-                    temp += 1
-                }
+    
+    for i in left...right {
+        count = 0
+        for j in 1...i {
+            if i % j == 0 {
+                count += 1
             }
-            temp += 2
-            if temp % 2 == 0 {
-                result += i
-            } else {
-                result -= i
-            }
-            temp = 0
         }
-    } else {
-        for i in left...right {
-            for j in 1...i/2 {
-                if i % j == 0 {
-                    temp += 1
-                }
-            }
-            temp += 1
-            if temp % 2 == 0 {
-                result += i
-            } else {
-                result -= i
-            }
-            temp = 0
+        //짝수
+        if count % 2 == 0 {
+            result += i
+        } else {
+            result -= i
         }
     }
     return result
 }
-solution(1, 2)
+solution(24, 27)
