@@ -5,25 +5,24 @@ func solution(_ k:Int, _ dungeons:[[Int]]) -> Int {
     var result = 0
     var check = [Bool](repeating: false, count: dungeons.count)
     
-    func dfs(_ arr: [[Int]], _ currentCheck: [Bool], _ k: Int) {
-        var currentCheck = currentCheck
+    func dfs(_ arr: [[Int]], _ k: Int) {
         var temp: [[Int]] = arr
         if arr.count == dungeons.count {
             result = arr.count
             return
         }
         for i in 0..<dungeons.count {
-            if !currentCheck[i] && dungeons[i][0] <= k {
-                currentCheck[i] = true
-                dfs(temp + [dungeons[i]], currentCheck, k - dungeons[i][1])
-                currentCheck[i] = false
+            if !check[i] && dungeons[i][0] <= k {
+                check[i] = true
+                dfs(temp + [dungeons[i]], k - dungeons[i][1])
+                check[i] = false
             } else {
                 result = result < arr.count ? arr.count : result
             }
         }
     }
     
-    dfs([], check, k)
+    dfs([], k)
     
     return result
 }
