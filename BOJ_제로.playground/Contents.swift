@@ -1,22 +1,13 @@
 import Foundation
 
 let k = Int(readLine()!)!
-var number: [Int] = []
-var result: Int = 0
-
+var result: [Int] = []
 for _ in 0..<k {
-    let temp = Int(readLine()!)!
-    if temp != 0 {
-        number.append(temp)
+    let input = Int(readLine()!)!
+    if input == 0 {
+        result.removeLast()
     } else {
-        if number.isEmpty {
-            continue
-        } else {
-            number.removeLast()
-        }
+        result.append(input)
     }
 }
-for element in number {
-    result += element
-}
-print(result)
+print(result.reduce(0) { $0 + $1 })
