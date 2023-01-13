@@ -5,7 +5,7 @@ final class FileIO {
     private var index: Int
     
     init(fileHandle: FileHandle = FileHandle.standardInput) {
-        buffer = Array(fileHandle.readDataToEndOfFile())+[UInt8(0)] // 인덱스 범위 넘어가는 것 방지
+        buffer = Array(fileHandle.readDataToEndOfFile())+[UInt8(0)]
         index = 0
     }
     
@@ -21,8 +21,8 @@ final class FileIO {
         var isPositive = true
         
         while now == 10
-                || now == 32 { now = read() } // 공백과 줄바꿈 무시
-        if now == 45{ isPositive.toggle(); now = read() } // 음수 처리
+                || now == 32 { now = read() }
+        if now == 45{ isPositive.toggle(); now = read() }
         while now >= 48, now <= 57 {
             sum = sum * 10 + Int(now-48)
             now = read()
@@ -36,7 +36,7 @@ final class FileIO {
         var now = read()
         
         while now == 10
-                || now == 32 { now = read() } // 공백과 줄바꿈 무시
+                || now == 32 { now = read() }
         
         while now != 10
                 && now != 32 && now != 0 {
@@ -65,7 +65,6 @@ var newPeople: [Int] = []
 var result = 0
 var check = [Bool](repeating: false, count: n)
 
-//미리 안쓰는건 빼는게 dfs돌릴때 시간이 줄듯. 몬스터의 수는 최대 20이니 시간 오래 안걸릴듯
 for i in 0..<monster.count {
     if monster[i] <= k {
         newMonster.append(monster[i])
@@ -76,7 +75,7 @@ if newMonster.isEmpty {
     print(0)
     exit(0)
 }
-func dfs(_ arr: [Int], _ damage: Int, _ resque: Int) {
+func solution(_ arr: [Int], _ damage: Int, _ resque: Int) {
     if damage <= k {
         result = max(result,resque)
     }
@@ -91,10 +90,10 @@ func dfs(_ arr: [Int], _ damage: Int, _ resque: Int) {
             for j in newArr {
                 tempDamage += newMonster[j]
             }
-            dfs(newArr, damage + tempDamage, resque + newPeople[i] )
+            solution(newArr, damage + tempDamage, resque + newPeople[i] )
             check[i] = false
         }
     }
 }
-dfs([], 0, 0)
+solution([], 0, 0)
 print(result)
