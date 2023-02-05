@@ -1,19 +1,17 @@
 import Foundation
 
-//let n = Int(readLine()!)!
-let n = 6
-//var space: [[Int]] = []
-//for _ in 0..<n {
-//    space.append(readLine()!.split(separator: " ").map { Int(String($0))! })
-//}
-var space = [[5,4,3,2,3,4],[4,3,2,3,4,5],[3,2,9,5,6,6],[2,1,2,3,4,5],[3,2,1,6,5,4],[6,6,6,6,6,6]]
+let n = Int(readLine()!)!
+var space: [[Int]] = []
+for _ in 0..<n {
+    space.append(readLine()!.split(separator: " ").map { Int(String($0))! })
+}
 var size = 2
 var count = 0
 var queue: [[Int]] = []
 var result = 0
 var visited = Array(repeating: Array(repeating: false, count: n), count: n)
-let dx = [-1,0,0,1]
-let dy = [0,-1,1,0]
+let dx = [1,0,-1,0]
+let dy = [0,1,0,-1]
 outer: for i in 0..<n {
     for j in 0..<n {
         if space[i][j] == 9 {
@@ -26,8 +24,12 @@ outer: for i in 0..<n {
 }
 while true {
     var fish: [[Int]] = []
-    while !queue.isEmpty {
-        let current = queue.removeFirst()
+    visited = Array(repeating: Array(repeating: false, count: n), count: n)
+    var idx = 0
+    while idx < queue.count {
+        let current = queue[idx]
+        idx += 1
+        visited[current[0]][current[1]] = true
         for i in 0..<dx.count {
             let newX = current[0] + dx[i]
             let newY = current[1] + dy[i]
@@ -40,11 +42,10 @@ while true {
             if !visited[newX][newY] {
                 if space[newX][newY] == 0 || space[newX][newY] == size {
                     queue.append([newX,newY,current[2] + 1])
-                    visited[newX][newY] = true
-                } else if space[newX][newY] < size {
+                } else {
                     fish.append([newX,newY,current[2] + 1])
-//                    result = current[2] + 1
                 }
+                visited[newX][newY] = true
             }
         }
     }
@@ -52,11 +53,14 @@ while true {
         print(result)
         break
     }
-    fish.sorted {
-        if $0[0] == $1[0] {
-            return $0[1] < $1[1]
+    fish = fish.sorted {
+        if $0[2] == $1[2] {
+            if $0[0] == $1[0] {
+                return $0[1] < $1[1]
+            }
+            return $0[0] < $1[0]
         }
-        return $0[0] < $1[0]
+        return $0[2] < $1[2]
     }
     let eat = fish.first!
     count += 1
@@ -66,11 +70,7 @@ while true {
     }
     space[eat[0]][eat[1]] = 0
     result = eat[2]
-    visited = Array(repeating: Array(repeating: false, count: n), count: n)
-    visited[eat[0]][eat[1]] = true
+    queue.removeAll()
     queue.append(eat)
-    print(queue)
 }
-print(visited)
-print(result)
 
