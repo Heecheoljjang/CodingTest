@@ -1,69 +1,103 @@
 import Foundation
 
-//let k = Int(readLine()!)!
-let k = 2
-//for _ in 0..<k {
-//    let input = readLine()!.split(separator: " ").map { Int(String($0))! }
-let input = [3,3]
-let temp = [[1,2],[2,3],[1,3]]
+final class FileIO {
+    private var buffer:[UInt8]
+    private var index: Int
+    
+    init(fileHandle: FileHandle = FileHandle.standardInput) {
+        buffer = Array(fileHandle.readDataToEndOfFile())+[UInt8(0)] // 인덱스 범위 넘어가는 것 방지
+        index = 0
+    }
+    
+    @inline(__always) private func read() -> UInt8 {
+        defer { index += 1 }
+        
+        return buffer.withUnsafeBufferPointer { $0[index] }
+    }
+    
+    @inline(__always) func readInt() -> Int {
+        var sum = 0
+        var now = read()
+        var isPositive = true
+        
+        while now == 10
+                || now == 32 { now = read() } // 공백과 줄바꿈 무시
+        if now == 45{ isPositive.toggle(); now = read() } // 음수 처리
+        while now >= 48, now <= 57 {
+            sum = sum * 10 + Int(now-48)
+            now = read()
+        }
+        
+        return sum * (isPositive ? 1:-1)
+    }
+    
+    @inline(__always) func readString() -> String {
+        var str = ""
+        var now = read()
+        
+        while now == 10
+                || now == 32 { now = read() } // 공백과 줄바꿈 무시
+        
+        while now != 10
+                && now != 32 && now != 0 {
+            str += String(bytes: [now], encoding: .ascii)!
+            now = read()
+        }
+        
+        return str
+    }
+}
+
+let file = FileIO()
+
+let k = file.readInt()
+outer: for _ in 0..<k {
+    var input: [Int] = []
+    for _ in 0...1 {
+        input.append(file.readInt())
+    }
     let v = input[0]; let e = input[1]
     var lines: [Int: [Int]] = [:]
-    var count = 0
-    var visited = Array(repeating: false, count: v + 1)
-    var queue: [[Int]] = []
-var left: [Int] = []
-var right: [Int] = []
-    for i in 0..<e {
-//        let line = readLine()!.split(separator: " ").map { Int(String($0))! }
-        let line = temp[i]
-//        lines[line[0]]!.append(line[1])
+    var visited = Array(repeating: 0, count: v + 1)
+    var queue: [Int] = []
+    for _ in 0..<e {
+        var line: [Int] = []
+        for _ in 0...1 {
+            line.append(file.readInt())
+        }
         if lines[line[0]] == nil {
             lines[line[0]] = [line[1]]
         } else {
             lines[line[0]]!.append(line[1])
         }
-    }
-print(lines)
-outer: for i in 1...v {
-        if visited[i] {
-            continue
+        if lines[line[1]] == nil {
+            lines[line[1]] = [line[0]]
+        } else {
+            lines[line[1]]!.append(line[0])
         }
-        queue = [[i,0]]
-        visited[i] = true
+    }
+    for i in 1...v {
+        if visited[i] == 0 {
+            visited[i] = 1
+        }
+        queue = [i]
         while !queue.isEmpty {
             let cur = queue.removeFirst()
-            if cur[1] % 2 == 0 {
-                left.append(cur[0])
-            } else {
-                right.append(cur[0])
-            }
-            print(left,right)
-            if lines[cur[0]] == nil {
+            if lines[cur] == nil {
                 continue
             }
-            for j in 0..<lines[cur[0]]!.count {
-                if !visited[lines[cur[0]]![j]] {
-                    queue.append([lines[cur[0]]![j],cur[1] + 1])
-                    visited[lines[cur[0]]![j]] = true
+            for j in 0..<lines[cur]!.count {
+                if visited[lines[cur]![j]] == 0 {
+                    queue.append(lines[cur]![j])
+                    visited[lines[cur]![j]] = -visited[cur]
                 } else {
-                    //방문했다면 나랑 같은 집합에있는지 확인
-                    if cur[1] % 2 == 0 {
-                        if left.contains(lines[cur[0]]![j]) {
-                            print("NO")
-//                            continue outer
-                            break outer
-                            
-                        }
-                    } else {
-                        if right.contains(lines[cur[0]]![j]) {
-                            print("No")
-//                            continue outer
-                            break outer
-                        }
+                    if visited[lines[cur]![j]] == visited[cur] {
+                        print("NO")
+                        continue outer
                     }
                 }
             }
         }
     }
     print("YES")
-//}
+}
