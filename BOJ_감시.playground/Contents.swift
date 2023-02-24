@@ -26,11 +26,6 @@ for i in 0..<input[0] {
         }
     }
 }
-//print("init", initValue)
-/*
- 방향
- 1 오 2 아 3 왼 4 위
- */
 let first = [[1],[2],[3],[4]]
 let second = [[1,3],[2,4],[1,3],[2,4]]
 let third = [[1,4],[1,2],[2,3],[3,4]]
@@ -49,7 +44,6 @@ func permu(_ arr: [Int]) {
 }
 permu([])
 for dir in directions {
-//    print(dir)
     var count = 0
     var tempOffice = office
     var tempResult = initValue
@@ -70,7 +64,6 @@ for dir in directions {
                 } else {
                     tempSet = fifth[curDir]
                 }
-//                print("tempSet", tempSet)
                 for num in tempSet {
                     if num == 1 {
                         //오른쪽 다 바꾸기
