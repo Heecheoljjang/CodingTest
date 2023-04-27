@@ -1,69 +1,81 @@
 import Foundation
 
-//let n = file.readInt()
-//var numbers: [Int] = []
-//for _ in 0..<n {
-//    numbers.append(file.readInt())
-//}
-//let m = file.readInt()
-let n = 7
-let numbers = [1,2,1,3,1,2,1]
-let m = 4
-let tttt = [[1,3],[2,5],[3,3],[5,7]]
-var result = Array(repeating: Array(repeating: -1, count: n), count: n)
-
-for i in 0..<m {
-    //    let s = file.readInt() - 1
-    //    let e = file.readInt() - 1
-    let s = tttt[i][0] - 1
-    let e = tttt[i][1] - 1
-    if s == e {
-        print("1")
-        result[s][e] = 1
-        continue
+final class FileIO {
+    private var buffer:[UInt8]
+    private var index: Int
+    
+    init(fileHandle: FileHandle = FileHandle.standardInput) {
+        buffer = Array(fileHandle.readDataToEndOfFile())+[UInt8(0)]
+        index = 0
     }
-    //이미 값이 있으면 바로 출력
-    if result[s][e] != -1{
-        print(result[s][e])
-        continue
+    
+    @inline(__always) private func read() -> UInt8 {
+        defer { index += 1 }
+        
+        return buffer.withUnsafeBufferPointer { $0[index] }
     }
-    //값이 없으면 result[s+1][e-1]의 값이 있는지 확인후, 없으면 그대로 진행
-    //있으면 numbers[s]와 numbers[e]가 같은지 확인후 같으면 result[s][e] = 1, 다르면 0
-    if s != n-1 && e != 0 {
-        if result[s+1][e-1] == 1 {
-            if numbers[s] == numbers[e] {
-                print("1")
-                result[s][e] = 1
-                continue
-            } else {
-                print("0")
-                result[s][e] = 0
-                continue
-            }
-        } else if result[s+1][e-1] == 0 {
-            print("0")
-            result[s][e] = 0
-            continue
+    
+    @inline(__always) func readInt() -> Int {
+        var sum = 0
+        var now = read()
+        var isPositive = true
+        
+        while now == 10
+                || now == 32 { now = read() }
+        if now == 45{ isPositive.toggle(); now = read() }
+        while now >= 48, now <= 57 {
+            sum = sum * 10 + Int(now-48)
+            now = read()
+        }
+        
+        return sum * (isPositive ? 1:-1)
+    }
+    
+    @inline(__always) func readString() -> String {
+        var str = ""
+        var now = read()
+        
+        while now == 10
+                || now == 32 { now = read() }
+        
+        while now != 10
+                && now != 32 && now != 0 {
+            str += String(bytes: [now], encoding: .ascii)!
+            now = read()
+        }
+        
+        return str
+    }
+}
+let file = FileIO()
+let n = file.readInt()
+var numbers: [Int] = []
+for _ in 0..<n {
+    numbers.append(file.readInt())
+}
+let m = file.readInt()
+var result = Array(repeating: Array(repeating: false, count: n), count: n)
+for i in 0..<n {
+    result[i][i] = true
+}
+for i in 0..<n-1 {
+    if numbers[i] == numbers[i+1] {
+        result[i][i+1] = true
+    }
+}
+for s in stride(from: n - 3, through: 0, by: -1) {
+    for e in s+2..<n {
+        if result[s+1][e-1] && numbers[s] == numbers[e] {
+            result[s][e] = true
         }
     }
-    let tArr = Array(numbers[s...e])
-    var start = 0
-    var end = tArr.count - 1
-    var ch = true
-    while start < end {
-        if tArr[start] != tArr[end] {
-            ch = false
-            break
-        } else {
-            start += 1
-            end -= 1
-        }
-    }
-    if ch {
+}
+for _ in 0..<m {
+    let s = file.readInt() - 1
+    let e = file.readInt() - 1
+    if result[s][e] {
         print("1")
-        result[s][e] = 1
     } else {
         print("0")
-        result[s][e] = 0
     }
 }
